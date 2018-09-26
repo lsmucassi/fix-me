@@ -45,7 +45,7 @@ public class Server {
         serverChannel.socket().bind(listenAddress);
         serverChannel.register(this.selector, SelectionKey.OP_ACCEPT);
 
-        System.out.println("Server started on port >> " + PORT);
+        System.out.println("Router Server started on port >> " + PORT);
 
         while (true) {
             // wait for events

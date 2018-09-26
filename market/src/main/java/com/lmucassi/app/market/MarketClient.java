@@ -13,19 +13,19 @@ public class MarketClient {
         InetSocketAddress hostAddress = new InetSocketAddress("localhost", 9093);
         SocketChannel client = SocketChannel.open(hostAddress);
 
-        System.out.println("Client... started");
+        System.out.println("Market Client... started");
 
         String threadName = Thread.currentThread().getName();
 
         // Send messages to server
-        String[] messages = new String[] { threadName + ": msg1", threadName + ": msg2", threadName + ": msg3" };
+        String[] messages = new String[] { threadName + ": msg1 from Market", threadName + ": msg2 from Market", threadName + ": msg3 from Market" };
 
         for (int i = 0; i < messages.length; i++) {
             ByteBuffer buffer = ByteBuffer.allocate(74);
             buffer.put(messages[i].getBytes());
             buffer.flip();
             client.write(buffer);
-            System.out.println(messages[i]);
+            System.out.println(messages[i] + " :From Market");
             buffer.clear();
             Thread.sleep(5000);
         }
@@ -46,8 +46,8 @@ public class MarketClient {
 
             }
         };
-        new Thread(client, "client-A").start();
-        new Thread(client, "client-B").start();
+        new Thread(client, "Market client-A").start();
+        new Thread(client, "Market client-B").start();
     }
 
 }

@@ -12,19 +12,19 @@ public class BrokerClient {
         InetSocketAddress hostAddress = new InetSocketAddress("localhost", 9093);
         SocketChannel client = SocketChannel.open(hostAddress);
 
-        System.out.println("Client... started");
+        System.out.println("Broker Client... started");
 
         String threadName = Thread.currentThread().getName();
 
         // Send messages to server
-        String[] messages = new String[] { threadName + ": msg1", threadName + ": msg2", threadName + ": msg3" };
+        String[] messages = new String[] { threadName + ": msg1 from Broker", threadName + ": msg2 from Broker", threadName + ": msg3 from Broker" };
 
         for (int i = 0; i < messages.length; i++) {
             ByteBuffer buffer = ByteBuffer.allocate(74);
             buffer.put(messages[i].getBytes());
             buffer.flip();
             client.write(buffer);
-            System.out.println(messages[i]);
+            System.out.println(messages[i] + " :From Broker");
             buffer.clear();
             Thread.sleep(5000);
         }
@@ -45,7 +45,7 @@ public class BrokerClient {
 
             }
         };
-        new Thread(client, "client-A").start();
-        new Thread(client, "client-B").start();
+        new Thread(client, "Broker client-A").start();
+        new Thread(client, "Broker client-B").start();
     }
 }

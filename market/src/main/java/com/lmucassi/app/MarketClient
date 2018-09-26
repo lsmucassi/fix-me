@@ -1,1 +1,10 @@
 The client that receives and send back buy messages and, or orders to the server to communicate with the broker
+
+A market has a list of instruments that can be traded. When orders are received from
+brokers the market tries to execute it. If the execution is successfull, it updates the
+internal instrument list and sends the broker an Executed message. If the order can’t be
+met, the market sends a Rejected message.
+The rules by which a market executes orders can be complex and you can play with
+them. This is why you build the simulator. Some simple rules that you need to respect
+is that an order can’t be executed if the instrument is not traded on the market or if the
+demanded quantity is not available (in case of Buy orders).
