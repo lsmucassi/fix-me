@@ -1,5 +1,6 @@
 package com.lmucassi.app.router;
 
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -9,19 +10,10 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-/**
- *
- * This is a simple NIO based server.
- *
- */
-public class EchoNIOServer {
+public class Server {
     private Selector selector;
 
     private InetSocketAddress listenAddress;
@@ -29,13 +21,13 @@ public class EchoNIOServer {
 
     public static void main(String[] args) throws Exception {
         try {
-            new EchoNIOServer("localhost", 9093).startServer();
+            new Server("localhost", 9093).startServer();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public EchoNIOServer(String address, int port) throws IOException {
+    public Server(String address, int port) throws IOException {
         listenAddress = new InetSocketAddress(address, PORT);
     }
 
