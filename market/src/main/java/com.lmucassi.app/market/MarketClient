@@ -11,7 +11,7 @@ import java.nio.channels.SocketChannel;
  * Test client for NIO server
  *
  */
-public class TestClient {
+public class MarkertCLient {
 
     public void startClient() throws IOException, InterruptedException {
 
