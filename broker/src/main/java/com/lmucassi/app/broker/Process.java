@@ -1,13 +1,21 @@
 package com.lmucassi.app.broker;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
+@Setter
+@Getter
 public class Process {
     private String _inst;
     private int _quant;
     private String _markt;
     private int _price;
+
+    Scanner getFxMess = new Scanner(System.in);
     Map<String, String> fxMess = new HashMap<String, String>();
 
     public Process(String inst, int quant, String markt, int price) {
@@ -29,5 +37,4 @@ public class Process {
         }
         System.out.println();
     }
-
 }

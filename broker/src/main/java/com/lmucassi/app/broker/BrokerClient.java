@@ -1,5 +1,6 @@
 package com.lmucassi.app.broker;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -9,11 +10,13 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
+import java.util.Scanner;
 import java.util.Set;
 
 
 public class BrokerClient {
 
+    Process getMes ;
     private InetSocketAddress hostAddress;
     private SocketChannel client;
     private Selector selector;
@@ -107,34 +110,19 @@ public class BrokerClient {
                     this.read(key);
                 } else if (key.isWritable()) {
                     // write data to client...
-                    System.out.println("inside writable");
+                    System.out.println("getting broker message :");
+
                     this.writer("written by broker");
+
                 }
             }
         }
         //client.close();
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException{
 
         BrokerClient client = new BrokerClient();
         client.startClient();
-
-//
-//        Runnable client = new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        };
-////        new Thread(client, "Broker client-A").start();
-//        new Thread(client, "Broker client-B").start();
     }
 }
