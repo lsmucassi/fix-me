@@ -111,7 +111,7 @@ public class BrokerClient {
                 } else if (key.isWritable()) {
                     // write data to client...
                     System.out.println("getting broker message :");
-
+                    getMes.setGetFxMess();
                     this.writer("written by broker");
 
                 }
