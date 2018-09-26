@@ -48,7 +48,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.broker.startup.Main</mainClass>
+                            <mainClass>com.lmucassi.app.broker.BrokerClient</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

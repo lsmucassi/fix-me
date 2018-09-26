@@ -50,7 +50,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.router.startup.Main</mainClass>
+                            <mainClass>com.lmucassi.app.router.Server</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

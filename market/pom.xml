@@ -49,7 +49,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.market.startup.Main</mainClass>
+                            <mainClass>com.lmucassi.app.market.MarketClient</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
