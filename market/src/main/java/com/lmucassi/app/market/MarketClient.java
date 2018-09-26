@@ -1,4 +1,4 @@
-package com.ruk.nio;
+package com.lmucassi.app.market;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -6,13 +6,8 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-/**
- *
- * Test client for NIO server
- *
- */
-public class BrokerClient {
 
+public class MarketClient {
     public void startClient() throws IOException, InterruptedException {
 
         InetSocketAddress hostAddress = new InetSocketAddress("localhost", 9093);
@@ -42,7 +37,7 @@ public class BrokerClient {
             @Override
             public void run() {
                 try {
-                    new TestClient().startClient();
+                    new MarketClient().startClient();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
