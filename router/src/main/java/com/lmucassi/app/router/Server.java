@@ -115,4 +115,15 @@ public class Server {
         System.out.println("Got: " + new String(data));
         channel.register(this.selector, SelectionKey.OP_WRITE);
     }
+
+    public void writer(String messages, SelectionKey key) throws IOException {
+        SocketChannel channel = (SocketChannel) key.channel();
+        ByteBuffer buffer = ByteBuffer.allocate(74);
+        buffer.put(messages.getBytes());
+        buffer.flip();
+        channel.write(buffer);
+        System.out.println(messages + " :From Broker");
+        buffer.clear();
+        channel.register(this.selector, SelectionKey.OP_READ);
+    }
 }

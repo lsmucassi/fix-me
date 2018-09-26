@@ -2,50 +2,139 @@ package com.lmucassi.app.broker;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.Iterator;
+import java.util.Set;
+
 
 public class BrokerClient {
-    public void startClient() throws IOException, InterruptedException {
 
-        InetSocketAddress hostAddress = new InetSocketAddress("localhost", 9093);
-        SocketChannel client = SocketChannel.open(hostAddress);
+    private InetSocketAddress hostAddress;
+    private SocketChannel client;
+    private Selector selector;
+    private ByteBuffer buffer;
 
-        System.out.println("Broker Client... started");
+    public BrokerClient() throws IOException{
+        int operations = SelectionKey.OP_CONNECT | SelectionKey.OP_WRITE;
+        this.hostAddress =  new InetSocketAddress("localhost",
 
-        String threadName = Thread.currentThread().getName();
+                9093);
+        this.selector = Selector.open();
+        this.client  = SocketChannel.open(hostAddress);
+        this.client.configureBlocking(false);
+        this.client.register(this.selector, operations);
 
-        // Send messages to server
-        String[] messages = new String[] { threadName + ": msg1 from Broker", threadName + ": msg2 from Broker", threadName + ": msg3 from Broker" };
 
-        for (int i = 0; i < messages.length; i++) {
-            ByteBuffer buffer = ByteBuffer.allocate(74);
-            buffer.put(messages[i].getBytes());
-            buffer.flip();
-            client.write(buffer);
-            System.out.println(messages[i] + " :From Broker");
-            buffer.clear();
-            Thread.sleep(5000);
-        }
-        client.close();
+        this.buffer = ByteBuffer.allocate(1024);
     }
 
-    public static void main(String[] args) {
-        Runnable client = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    new BrokerClient().startClient();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+    private void stop() throws IOException {
+        this.client.close();
+        this.buffer = null;
+    }
 
+    private boolean processConnect(SelectionKey key) throws IOException{
+        SocketChannel channel = (SocketChannel) key.channel();
+        while (channel.isConnectionPending()) {
+            channel.finishConnect();
+        }
+        return true;
+    }
+
+    public void writer(String messages) throws IOException {
+        buffer.put(messages.getBytes());
+        buffer.flip();
+        client.write(buffer);
+        System.out.println(messages + " :From Broker");
+        buffer.clear();
+        client.register(this.selector, SelectionKey.OP_READ);
+    }
+
+    // read from the socket channel
+    private void read(SelectionKey key) throws IOException {
+        SocketChannel channel = (SocketChannel) key.channel();
+        int numRead = -1;
+        numRead = channel.read(buffer);
+
+        if (numRead == -1) {
+            Socket socket = channel.socket();
+            SocketAddress remoteAddr = socket.getRemoteSocketAddress();
+            System.out.println("Connection closed by Sever client: " + remoteAddr);
+            channel.close();
+            key.cancel();
+            return;
+        }
+
+        byte[] data = new byte[numRead];
+        System.arraycopy(buffer.array(), 0, data, 0, numRead);
+        System.out.println("Got: " + new String(data));
+        channel.register(this.selector, SelectionKey.OP_WRITE);
+    }
+
+    public void startClient() throws IOException {
+        System.out.println("Broker Client... started");
+
+        while (true){
+
+            if (this.selector.select() == 0) {
+
+                continue;
             }
-        };
-        new Thread(client, "Broker client-A").start();
-        new Thread(client, "Broker client-B").start();
+
+            Set<SelectionKey> readyKeys = selector.selectedKeys();
+            Iterator iterator = readyKeys.iterator();
+//            if(brokerFlag)
+//                Broker();
+            while (iterator.hasNext()) {
+                SelectionKey key = (SelectionKey) iterator.next();
+                // Remove key from set so we don't process it twice
+                iterator.remove();
+
+                if (!key.isValid()) {
+                    continue;
+                }
+                if (key.isConnectable()) {
+                    boolean connected = processConnect(key);
+                    if (!connected)
+                        stop();
+                }
+                if (key.isReadable()) { // Read from client
+                    this.read(key);
+                } else if (key.isWritable()) {
+                    // write data to client...
+                    System.out.println("inside writable");
+                    this.writer("written by broker");
+                }
+            }
+        }
+        //client.close();
+    }
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+        BrokerClient client = new BrokerClient();
+        client.startClient();
+
+//
+//        Runnable client = new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        };
+////        new Thread(client, "Broker client-A").start();
+//        new Thread(client, "Broker client-B").start();
     }
 }
