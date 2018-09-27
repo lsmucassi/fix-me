@@ -1,6 +1,5 @@
 package com.lmucassi.app.broker;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -10,13 +9,10 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
-import java.util.Scanner;
 import java.util.Set;
-
 
 public class BrokerClient {
 
-    Process getMes ;
     private InetSocketAddress hostAddress;
     private SocketChannel client;
     private Selector selector;
@@ -24,15 +20,11 @@ public class BrokerClient {
 
     public BrokerClient() throws IOException{
         int operations = SelectionKey.OP_CONNECT | SelectionKey.OP_WRITE;
-        this.hostAddress =  new InetSocketAddress("localhost",
-
-                9093);
+        this.hostAddress =  new InetSocketAddress("localhost", 9093);
         this.selector = Selector.open();
         this.client  = SocketChannel.open(hostAddress);
         this.client.configureBlocking(false);
         this.client.register(this.selector, operations);
-
-
         this.buffer = ByteBuffer.allocate(1024);
     }
 
@@ -67,7 +59,7 @@ public class BrokerClient {
         if (numRead == -1) {
             Socket socket = channel.socket();
             SocketAddress remoteAddr = socket.getRemoteSocketAddress();
-            System.out.println("Connection closed by Sever client: " + remoteAddr);
+            System.out.println("Connection closed: [ Broker client: " + remoteAddr + " ]");
             channel.close();
             key.cancel();
             return;
@@ -83,16 +75,11 @@ public class BrokerClient {
         System.out.println("Broker Client... started");
 
         while (true){
-
             if (this.selector.select() == 0) {
-
                 continue;
-            }
 
             Set<SelectionKey> readyKeys = selector.selectedKeys();
             Iterator iterator = readyKeys.iterator();
-//            if(brokerFlag)
-//                Broker();
             while (iterator.hasNext()) {
                 SelectionKey key = (SelectionKey) iterator.next();
                 // Remove key from set so we don't process it twice
@@ -113,7 +100,6 @@ public class BrokerClient {
                     System.out.println("getting broker message :");
 //                    getMes.setGetFxMess();
                     this.writer("written by broker");
-
                 }
             }
         }
@@ -121,7 +107,6 @@ public class BrokerClient {
     }
 
     public static void main(String[] args) throws IOException{
-
         BrokerClient client = new BrokerClient();
         client.startClient();
     }

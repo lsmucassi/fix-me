@@ -44,6 +44,7 @@ public class Process {
         //setPrice(mess = getFxMess.nextLine());
         System.out.println();
     }
+
     public void showFXMess() {
         fxMess.put("Instrument", this._inst);
         fxMess.put("Quantity", Integer.toString(this._quant));
