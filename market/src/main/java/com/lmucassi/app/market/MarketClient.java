@@ -20,9 +20,9 @@ public class MarketClient {
     private ByteBuffer buffer;
 
     public MarketClient() throws IOException {
-        int operations = SelectionKey.OP_CONNECT | SelectionKey.OP_WRITE
-        this.hostAddress  = new InetSocketAddress("localhost", 5000);
-        this.selector = Selector.open()
+        int operations = SelectionKey.OP_CONNECT | SelectionKey.OP_WRITE;
+        this.hostAddress  = new InetSocketAddress("localhost", 9093);
+        this.selector = Selector.open();
         this.client = SocketChannel.open(hostAddress);
         this.client.configureBlocking(false);
         this.client.register(this.selector, operations);
@@ -46,7 +46,7 @@ public class MarketClient {
         buffer.put(messages.getBytes());
         buffer.flip();
         client.write(buffer);
-        System.out.println(messages + " :To Server");
+        System.out.println(messages + " : market To Server");
         buffer.clear();
         client.register(this.selector, SelectionKey.OP_READ);
     }
@@ -77,21 +77,22 @@ public class MarketClient {
             Iterator iter = readyKeys.iterator();
             while (iter.hasNext()) {
                 SelectionKey key = (SelectionKey) iter.next();
+                iter.remove();
 
+                if (!key.isValid())
+                    continue;
+                if (key.isConnectable()) {
+                    boolean connected = processConnection(key);
+                    if (!connected)
+                        stop();
+                }
+                if (key.isReadable())
+                    this.read(key);
+                else if (key.isWritable()) {
+                    System.out.println("Getting Market message :");
+                    this.writer("written by ");
+                }
             }
-        }
-
-        // Send messages to server
-        String[] messages = new String[] { threadName + ": msg1 from Market", threadName + ": msg2 from Market", threadName + ": msg3 from Market" };
-
-        for (int i = 0; i < messages.length; i++) {
-            ByteBuffer buffer = ByteBuffer.allocate(74);
-            buffer.put(messages[i].getBytes());
-            buffer.flip();
-            client.write(buffer);
-            System.out.println(messages[i] + " :From Market");
-            buffer.clear();
-            Thread.sleep(5000);
         }
 //        client.close();
     }

@@ -45,7 +45,7 @@ public class BrokerClient {
         buffer.put(messages.getBytes());
         buffer.flip();
         client.write(buffer);
-        System.out.println(messages + " :From Broker");
+        System.out.println(messages + " : broker To Server");
         buffer.clear();
         client.register(this.selector, SelectionKey.OP_READ);
     }
@@ -74,39 +74,39 @@ public class BrokerClient {
     public void startClient() throws IOException {
         System.out.println("Broker Client... started");
 
-        while (true){
-            if (this.selector.select() == 0) {
+        while (true) {
+            if (this.selector.select() == 0)
                 continue;
 
-            Set<SelectionKey> readyKeys = selector.selectedKeys();
-            Iterator iterator = readyKeys.iterator();
-            while (iterator.hasNext()) {
-                SelectionKey key = (SelectionKey) iterator.next();
-                // Remove key from set so we don't process it twice
-                iterator.remove();
+                Set<SelectionKey> readyKeys = selector.selectedKeys();
+                Iterator iterator = readyKeys.iterator();
+                while (iterator.hasNext()) {
+                    SelectionKey key = (SelectionKey) iterator.next();
+                    // Remove key from set so we don't process it twice
+                    iterator.remove();
 
-                if (!key.isValid()) {
-                    continue;
-                }
-                if (key.isConnectable()) {
-                    boolean connected = processConnect(key);
-                    if (!connected)
-                        stop();
-                }
-                if (key.isReadable()) { // Read from client
-                    this.read(key);
-                } else if (key.isWritable()) {
-                    // write data to client...
-                    System.out.println("getting broker message :");
+                    if (!key.isValid()) {
+                        continue;
+                    }
+                    if (key.isConnectable()) {
+                        boolean connected = processConnect(key);
+                        if (!connected)
+                            stop();
+                    }
+                    if (key.isReadable()) { // Read from client
+                        this.read(key);
+                    } else if (key.isWritable()) {
+                        // write data to client...
+                        System.out.println("getting broker message :");
 //                    getMes.setGetFxMess();
-                    this.writer("written by broker");
+                        this.writer("written by");
+                    }
                 }
-            }
         }
         //client.close();
     }
 
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         BrokerClient client = new BrokerClient();
         client.startClient();
     }
