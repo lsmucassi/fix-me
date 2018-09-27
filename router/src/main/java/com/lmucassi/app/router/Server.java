@@ -124,7 +124,7 @@ public class Server {
         buffer.put(messages.getBytes());
         buffer.flip();
         channel.write(buffer);
-        System.out.println(messages + " :From Sever");
+        System.out.println(messages + " :To client From Sever");
         buffer.clear();
         channel.register(this.selector, SelectionKey.OP_READ);
     }
