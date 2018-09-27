@@ -10,6 +10,7 @@ import java.util.Scanner;
 @Setter
 @Getter
 public class Process {
+    String ID;
     String _inst;
     int _quant;
     String _markt;
@@ -18,7 +19,7 @@ public class Process {
     Scanner getFxMess = new Scanner(System.in);
     Map<String, String> fxMess = new HashMap<String, String>();
 
-    public Process(String inst, int quant, String markt, int price) {
+    public Process(/*String inst, int quant, String markt, int price*/) {
 //        this._inst = inst;
 //        this._quant = quant;
 //        this._markt = markt;
