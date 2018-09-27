@@ -58,7 +58,8 @@ public class Server {
             Set<SelectionKey> readyKeys = selector.selectedKeys();
             Iterator iterator = readyKeys.iterator();
             while (iterator.hasNext()) {
-                SelectionKey key = (SelectionKey) iterator.next();
+                SelectionKey key;
+                key = (SelectionKey) iterator.next();
 
                 // Remove key from set so we don't process it twice
                 iterator.remove();
@@ -73,6 +74,7 @@ public class Server {
                     this.read(key);
                 } else if (key.isWritable()) {
                     // write data to client...
+                    this.writer("Writing back to client by server", key);
                 }
             }
         }
@@ -122,7 +124,7 @@ public class Server {
         buffer.put(messages.getBytes());
         buffer.flip();
         channel.write(buffer);
-        System.out.println(messages + " :From Broker");
+        System.out.println(messages + " :From Sever");
         buffer.clear();
         channel.register(this.selector, SelectionKey.OP_READ);
     }
