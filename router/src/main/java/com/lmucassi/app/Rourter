@@ -1,8 +1,8 @@
 The Server package, also know as the router, base communication centre between broker and market
 
 The router is the central component of the applications. All other components connect
-to it in order to send messages to other components. The router will perform no buiness
+to it in order to send messages to other components. The router will perform no business
 logic, it will just dispatch messages to the destination component(s). The router must
-accept incomming connections from multiple brokers and markets. We call the router a
-market connetivity provider, because it allows brokers to send messages (in FIX format)
+accept incoming connections from multiple brokers and markets. We call the router a
+market connectivity provider, because it allows brokers to send messages (in FIX format)
 to markets, without depending on specific implementation of the market.
