@@ -19,7 +19,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.lmucassi.app.router.RouterServer</mainClass>
+                            <mainClass>com.lmucassi.app.router.RouterSever</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -32,5 +32,4 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
-
 </project>

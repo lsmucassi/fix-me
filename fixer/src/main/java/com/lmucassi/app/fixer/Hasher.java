@@ -13,8 +13,9 @@ public class Hasher {
             md.update(id.getBytes());
             byte[] digest = md.digest();
             Hash = DatatypeConverter.printHexBinary(digest).toLowerCase();
-        }catch(NoSuchAlgorithmException e) {
+        } catch(NoSuchAlgorithmException e) {
             e.printStackTrace();
+            System.out.writelive("Error at: Hashing")
         }
         return Hash;
     }
